@@ -4,6 +4,11 @@ resolver = "2"
 
 [workspace.package]
 edition = "2021"
+rust-version = "1.99"
 license = "MIT"
 repository = "https://github.com/f4ah6o/codegraph"
 authors = ["f12o"]
+
+[profile.dist]
+inherits = "release"
+lto = "thin"

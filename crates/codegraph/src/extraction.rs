@@ -209,7 +209,13 @@ pub fn extract_from_source(path: &Path, source: &str, language: Language) -> Ext
 
     let extractor = extractor_for_language(language);
     (extractor.extract)(
-        &file_path, &source, language, now, &mut nodes, &mut edges, &mut refs,
+        file_path.as_str(),
+        source,
+        language,
+        now,
+        &mut nodes,
+        &mut edges,
+        &mut refs,
     );
 
     ExtractionResult {
@@ -3421,6 +3427,7 @@ fn extract_moonbit_sol_routes(
     }
 }
 
+#[allow(clippy::too_many_arguments)]
 fn add_moonbit_route_node(
     file_path: &str,
     source: &str,
@@ -3648,6 +3655,7 @@ fn try_extract_rust_tree_sitter(
     true
 }
 
+#[allow(clippy::too_many_arguments)]
 fn collect_rust_nodes(
     file_path: &str,
     source: &str,
@@ -4097,6 +4105,7 @@ fn extract_liquid(
     }
 }
 
+#[allow(clippy::too_many_arguments)]
 fn add_liquid_reference_node(
     file_path: &str,
     now: i64,
@@ -4323,6 +4332,7 @@ fn extract_generic(
     );
 }
 
+#[allow(clippy::too_many_arguments)]
 fn add_regex_nodes(
     file_path: &str,
     source: &str,
@@ -4395,6 +4405,7 @@ fn add_call_refs(
     }
 }
 
+#[allow(clippy::too_many_arguments)]
 fn make_node(
     file_path: &str,
     language: Language,
@@ -4517,6 +4528,7 @@ fn unresolved(
     }
 }
 
+#[allow(clippy::too_many_arguments)]
 fn refs_push(
     refs: &mut Vec<UnresolvedReference>,
     from: &str,

@@ -92,6 +92,25 @@ cgz unlock [path]        # remove .codegraph/codegraph.lock
 Releases are published as the Rust crate `cgz` and mirrored as GitHub Releases
 on `f4ah6o/codegraph`. `CHANGELOG.md` is the source of truth for release notes.
 
+Releases use CalVer `YYYY.MM.PATCH` in `Asia/Tokyo` through
+`f4ah6o/calver-action` (the `rust-dist.yaml` reusable workflow in
+`.github/workflows/release.yaml`). Force-move the `latest` tag to the commit to
+release:
+
+```bash
+just release        # runs release-check, then git tag -f latest HEAD && git push -f origin latest
+```
+
+The workflow allocates the next `vYYYY.MM.PATCH`, writes the version into a
+release-only commit (not merged back to `main`), publishes `cgz` to crates.io,
+dispatches cargo-dist on the immutable tag to build binaries and the GitHub
+Release, and verifies `cargo binstall cgz`. Version bumps are owned by the
+workflow — do not bump `version` in `crates/codegraph/Cargo.toml` by hand.
+
+Keep binary distribution settings in `dist-workspace.toml` and regenerate
+`.github/workflows/release.yml` with `dist generate` rather than hand-editing
+the generated workflow.
+
 When adding a changelog entry for a new version:
 
 1. Add a new `## [X.Y.Z] - YYYY-MM-DD` block at the top of `CHANGELOG.md`.
@@ -99,22 +118,6 @@ When adding a changelog entry for a new version:
 3. Write entries from the user's perspective.
 4. Add the link reference at the bottom:
    `[X.Y.Z]: https://github.com/f4ah6o/codegraph/releases/tag/vX.Y.Z`
-
-Release commands are run by the user after review:
-
-```bash
-git add Cargo.toml Cargo.lock crates/codegraph/Cargo.toml CHANGELOG.md
-git commit -m "release: X.Y.Z (<one-line summary>)"
-git push
-
-cargo publish --locked --manifest-path crates/codegraph/Cargo.toml
-
-git tag vX.Y.Z
-git push origin vX.Y.Z
-gh release create vX.Y.Z \
-  --title "vX.Y.Z" \
-  --notes-file <(awk '/^## \[X.Y.Z\]/,/^## \[/{ if (/^## \[/ && !/X.Y.Z/) exit; print }' CHANGELOG.md)
-```
 
 ## Issues
 
