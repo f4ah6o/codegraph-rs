@@ -569,8 +569,7 @@ impl Database {
             if !kinds.is_empty() {
                 sql.push_str(" AND kind IN (");
                 sql.push_str(
-                    &std::iter::repeat("?")
-                        .take(kinds.len())
+                    &std::iter::repeat_n("?", kinds.len())
                         .collect::<Vec<_>>()
                         .join(","),
                 );
@@ -849,7 +848,7 @@ fn load_project_aliases(project_root: &Path) -> Result<Vec<PathAlias>> {
                 has_wildcard,
             });
         }
-        aliases.sort_by(|a, b| b.prefix.len().cmp(&a.prefix.len()));
+        aliases.sort_by_key(|a| std::cmp::Reverse(a.prefix.len()));
         return Ok(aliases);
     }
     Ok(Vec::new())

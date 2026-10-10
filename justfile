@@ -10,9 +10,9 @@ release-check:
 publish-cli: release-check
     cargo publish --locked --manifest-path {{crate_manifest}}
 
+# Move the `latest` tag to HEAD to trigger the CalVer release workflow.
 release-tag:
-    version=$(rg -n "^version = " {{crate_manifest}} | head -n1 | awk -F'"' '{print $2}'); \
-    git tag "v${version}"; \
-    git push origin "v${version}"
+    git tag -f latest HEAD
+    git push -f origin latest
 
 release: release-check release-tag

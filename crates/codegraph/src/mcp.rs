@@ -71,7 +71,7 @@ impl MCPServer {
                 })
             }),
             "tools/call" => {
-                let Some(id) = id else { return None };
+                let id = id?;
                 let params = message.get("params").cloned().unwrap_or_else(|| json!({}));
                 let name = params
                     .get("name")
